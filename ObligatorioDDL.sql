@@ -82,3 +82,87 @@ CREATE TABLE trueque (
     CONSTRAINT trueque_B_to_uso_rec_fk FOREIGN KEY (IdPartidaB,IdPaisB,JugadorB,IdRecursoB) REFERENCES inventarioRecurso(IdPartida,IdPais,Alias,IdRecurso));
     
 COMMIT;
+
+--DATOS:
+
+-- PAISES
+INSERT INTO pais VALUES (1, 'Uruguay');
+INSERT INTO pais VALUES (2, 'Peru');
+INSERT INTO pais VALUES (3, 'Argentina');
+INSERT INTO pais VALUES (4, 'Brasil');
+
+-- JUGADORES
+INSERT INTO jugador VALUES ('michp', 'Michel Pintos', 'mp@email.com', TO_DATE('01/06/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('letik', 'Leticia Zadikian', 'lk@email.com', TO_DATE('15/07/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('paud10', 'Paulina Danten', 'pd10@email.com', TO_DATE('10/08/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('franva', 'Francisco Vazquez', 'fv@email.com', TO_DATE('20/05/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('melik', 'Melissa Kuza', 'mk@email.com', TO_DATE('25/07/2025','DD/MM/YYYY'));
+
+-- PARTIDAS
+INSERT INTO partida VALUES (101, 1, TO_DATE('01/09/2025','DD/MM/YYYY'), 1200);
+INSERT INTO partida VALUES (102, 2, TO_DATE('15/09/2025','DD/MM/YYYY'), 900);
+INSERT INTO partida VALUES (103, 3, TO_DATE('20/08/2025','DD/MM/YYYY'), 1500);
+INSERT INTO partida VALUES (104, 4, TO_DATE('25/06/2025','DD/MM/YYYY'), 1100);
+
+-- PAISPARTIDAJUGADOR
+INSERT INTO paisPartidaJugador VALUES (101, 1, 'michp', 'ANFITRION');
+INSERT INTO paisPartidaJugador VALUES (101, 1, 'letik', 'INVITADO');
+INSERT INTO paisPartidaJugador VALUES (102, 2, 'paud10', 'ANFITRION');
+INSERT INTO paisPartidaJugador VALUES (102, 2, 'franva', 'SE UNIO');
+INSERT INTO paisPartidaJugador VALUES (103, 3, 'melik', 'INVITADO');
+INSERT INTO paisPartidaJugador VALUES (103, 3, 'michp', 'SE UNIO');
+
+-- RECURSOS
+INSERT INTO recurso VALUES (1, 'Hierro', 'CONSTRUCCION');
+INSERT INTO recurso VALUES (2, 'Madera', 'CONSTRUCCION');
+INSERT INTO recurso VALUES (3, 'Trigo', 'CONSUMO');
+INSERT INTO recurso VALUES (4, 'Papel', 'PBN');
+
+-- INVENTARIO RECURSO
+INSERT INTO inventarioRecurso VALUES (101, 1, 'michp', 1, 500);
+INSERT INTO inventarioRecurso VALUES (101, 1, 'letik', 2, 300);
+INSERT INTO inventarioRecurso VALUES (102, 2, 'paud10', 1, 400);
+INSERT INTO inventarioRecurso VALUES (102, 2, 'franva', 3, 200);
+INSERT INTO inventarioRecurso VALUES (103, 3, 'melik', 2, 350);
+INSERT INTO inventarioRecurso VALUES (103, 3, 'michp', 3, 150);
+
+-- CONSTRUCCIONES
+INSERT INTO construccion VALUES (101, 1, 'michp', 1, 1, 'PUERTO', 'CONSUME', 100);
+INSERT INTO construccion VALUES (101, 1, 'letik', 2, 2, 'ASTILLERO', 'PRODUCE', 150);
+INSERT INTO construccion VALUES (102, 2, 'paud10', 1, 3, 'PLANTACION', 'CONSUME', 200);
+INSERT INTO construccion VALUES (103, 3, 'melik', 2, 4, 'USINAS', 'CONSUME', 50);
+INSERT INTO construccion VALUES (103, 3, 'michp', 3, 5, 'USINAS', 'PRODUCE', 300);
+
+-- TRUEQUES
+INSERT INTO trueque VALUES (1, 101, 1, 'michp', 1, 102, 2, 'paud10', 1, 50, 50);
+INSERT INTO trueque VALUES (2, 102, 2, 'franva', 3, 103, 3, 'melik', 2, 20, 30);
+
+COMMIT;
+
+--EJERCICIOS
+
+--1
+SELECT p.*
+FROM pais p
+JOIN construccion c ON p.IdPais = c.IdPais
+JOIN recurso r ON c.IdRecurso = r.IdRecurso
+WHERE (c.TipoConstruccion = 'ASTILLERO' OR c.TipoConstruccion = 'PUERTO') 
+       AND r.TipoRecurso = 'CONSTRUCCION'
+
+MINUS
+
+(SELECT p.*
+FROM pais p
+JOIN construccion c ON p.IdPais = c.IdPais
+JOIN recurso r ON c.IdRecurso = r.IdRecurso
+WHERE c.TipoConstruccion = 'ASTILLERO' AND r.TipoRecurso = 'CONSTRUCCION'
+
+INTERSECT
+
+SELECT p.*
+FROM pais p
+JOIN construccion c ON p.IdPais = c.IdPais
+JOIN recurso r ON c.IdRecurso = r.IdRecurso
+WHERE c.TipoConstruccion = 'PUERTO' AND r.TipoRecurso = 'CONSTRUCCION')
+
+--2
