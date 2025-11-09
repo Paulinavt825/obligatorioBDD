@@ -90,19 +90,26 @@ INSERT INTO pais VALUES (1, 'Uruguay');
 INSERT INTO pais VALUES (2, 'Peru');
 INSERT INTO pais VALUES (3, 'Argentina');
 INSERT INTO pais VALUES (4, 'Brasil');
+INSERT INTO pais VALUES (5, 'Chile');
+INSERT INTO pais VALUES (6, 'Colombia');
 
 -- JUGADORES
-INSERT INTO jugador VALUES ('michp', 'Michel Pintos', 'mp@email.com', TO_DATE('01/06/2025','DD/MM/YYYY'));
-INSERT INTO jugador VALUES ('letik', 'Leticia Zadikian', 'lk@email.com', TO_DATE('15/07/2025','DD/MM/YYYY'));
-INSERT INTO jugador VALUES ('paud10', 'Paulina Danten', 'pd10@email.com', TO_DATE('10/08/2025','DD/MM/YYYY'));
-INSERT INTO jugador VALUES ('franva', 'Francisco Vazquez', 'fv@email.com', TO_DATE('20/05/2025','DD/MM/YYYY'));
-INSERT INTO jugador VALUES ('melik', 'Melissa Kuza', 'mk@email.com', TO_DATE('25/07/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('michp', 'Michel Pintos', 'mp@gmail.com', TO_DATE('01/06/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('letik', 'Leticia Zadikian', 'lk@gmail.com', TO_DATE('15/07/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('paud10', 'Paulina Danten', 'pd10@gmail.com', TO_DATE('10/08/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('franva', 'Francisco Vazquez', 'fv@gmail.com', TO_DATE('20/05/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('melik', 'Melissa Kuza', 'mk@gmail.com', TO_DATE('25/07/2025','DD/MM/YYYY'));
+INSERT INTO jugador VALUES ('matsal','Mateus Salmon','ms@gmail.com', TO_DATE('01/07/2025','DD/MM/YYYY'));
 
 -- PARTIDAS
 INSERT INTO partida VALUES (101, 1, TO_DATE('01/09/2025','DD/MM/YYYY'), 1200);
 INSERT INTO partida VALUES (102, 2, TO_DATE('15/09/2025','DD/MM/YYYY'), 900);
 INSERT INTO partida VALUES (103, 3, TO_DATE('20/08/2025','DD/MM/YYYY'), 1500);
 INSERT INTO partida VALUES (104, 4, TO_DATE('25/06/2025','DD/MM/YYYY'), 1100);
+INSERT INTO partida VALUES (105, 5, TO_DATE('10/09/2025','DD/MM/YYYY'), 1000);
+INSERT INTO partida VALUES (106, 6, TO_DATE('12/09/2025','DD/MM/YYYY'), 900);
+INSERT INTO partida VALUES (107, 1, TO_DATE('12/08/2025','DD/MM/YYYY'), 1000);
+
 
 -- PAISPARTIDAJUGADOR
 INSERT INTO paisPartidaJugador VALUES (101, 1, 'michp', 'ANFITRION');
@@ -111,12 +118,17 @@ INSERT INTO paisPartidaJugador VALUES (102, 2, 'paud10', 'ANFITRION');
 INSERT INTO paisPartidaJugador VALUES (102, 2, 'franva', 'SE UNIO');
 INSERT INTO paisPartidaJugador VALUES (103, 3, 'melik', 'INVITADO');
 INSERT INTO paisPartidaJugador VALUES (103, 3, 'michp', 'SE UNIO');
+INSERT INTO paisPartidaJugador VALUES (105, 5, 'matsal', 'ANFITRION');
+INSERT INTO paisPartidaJugador VALUES (106, 6, 'michp', 'ANFITRION');
+INSERT INTO paisPartidaJugador VALUES (106, 6, 'franva', 'SE UNIO');
+INSERT INTO paisPartidaJugador VALUES (107, 1, 'matsal', 'ANFITRION');
+
 
 -- RECURSOS
-INSERT INTO recurso VALUES (1, 'Hierro', 'CONSTRUCCION');
-INSERT INTO recurso VALUES (2, 'Madera', 'CONSTRUCCION');
-INSERT INTO recurso VALUES (3, 'Trigo', 'CONSUMO');
-INSERT INTO recurso VALUES (4, 'Papel', 'PBN');
+INSERT INTO recurso VALUES (1, 'H', 'CONSTRUCCION');
+INSERT INTO recurso VALUES (2, 'M', 'CONSTRUCCION');
+INSERT INTO recurso VALUES (3, 'T', 'CONSUMO');
+INSERT INTO recurso VALUES (4, 'P', 'PBN');
 
 -- INVENTARIO RECURSO
 INSERT INTO inventarioRecurso VALUES (101, 1, 'michp', 1, 500);
@@ -125,6 +137,11 @@ INSERT INTO inventarioRecurso VALUES (102, 2, 'paud10', 1, 400);
 INSERT INTO inventarioRecurso VALUES (102, 2, 'franva', 3, 200);
 INSERT INTO inventarioRecurso VALUES (103, 3, 'melik', 2, 350);
 INSERT INTO inventarioRecurso VALUES (103, 3, 'michp', 3, 150);
+INSERT INTO inventarioRecurso VALUES (105, 5, 'matsal', 2, 500);
+INSERT INTO inventarioRecurso VALUES (106, 6, 'michp', 1, 400);
+INSERT INTO inventarioRecurso VALUES (102, 2, 'paud10', 4, 999);
+INSERT INTO inventarioRecurso VALUES (107, 1, 'matsal', 1, 100);
+INSERT INTO inventarioRecurso VALUES (107, 1, 'matsal', 2, 100);
 
 -- CONSTRUCCIONES
 INSERT INTO construccion VALUES (101, 1, 'michp', 1, 1, 'PUERTO', 'CONSUME', 100);
@@ -132,10 +149,15 @@ INSERT INTO construccion VALUES (101, 1, 'letik', 2, 2, 'ASTILLERO', 'PRODUCE', 
 INSERT INTO construccion VALUES (102, 2, 'paud10', 1, 3, 'PLANTACION', 'CONSUME', 200);
 INSERT INTO construccion VALUES (103, 3, 'melik', 2, 4, 'USINAS', 'CONSUME', 50);
 INSERT INTO construccion VALUES (103, 3, 'michp', 3, 5, 'USINAS', 'PRODUCE', 300);
+INSERT INTO construccion VALUES (105, 5, 'matsal', 2, 10, 'PUERTO', 'CONSUME', 100);
+INSERT INTO construccion VALUES (106, 6, 'michp', 1, 11, 'ASTILLERO', 'PRODUCE', 150);
+INSERT INTO construccion VALUES (107, 1, 'matsal', 1, 20, 'PUERTO', 'CONSUME', 50);
+INSERT INTO construccion VALUES (107, 1, 'matsal', 2, 21, 'ASTILLERO', 'CONSUME', 50);
 
 -- TRUEQUES
 INSERT INTO trueque VALUES (1, 101, 1, 'michp', 1, 102, 2, 'paud10', 1, 50, 50);
 INSERT INTO trueque VALUES (2, 102, 2, 'franva', 3, 103, 3, 'melik', 2, 20, 30);
+INSERT INTO trueque VALUES (3, 102, 2, 'paud10', 4, 102, 2, 'franva', 3, 10, 5);
 
 COMMIT;
 
@@ -163,7 +185,7 @@ SELECT p.*
 FROM pais p
 JOIN construccion c ON p.IdPais = c.IdPais
 JOIN recurso r ON c.IdRecurso = r.IdRecurso
-WHERE c.TipoConstruccion = 'PUERTO' AND r.TipoRecurso = 'CONSTRUCCION')
+WHERE c.TipoConstruccion = 'PUERTO' AND r.TipoRecurso = 'CONSTRUCCION');
 
 --2
 SELECT pa.IdPartida, pais.NombrePais, pa.FechaCreacion, ppj.Alias
@@ -180,7 +202,7 @@ JOIN pais pais ON pais.IdPais = ppj.IdPais
 JOIN trueque t ON (t.IdPartidaA = ppj.IdPartida AND t.IdPaisA = ppj.IdPais AND t.JugadorA = ppj.Alias) OR
 								(t.IdPartidaB = ppj.IdPartida AND t.IdPaisB = ppj.IdPais AND t.JugadorB = ppj.Alias)
 JOIN recurso r ON t.IdRecursoA = r.IdRecurso OR t.IdRecursoB = r.IdRecurso
-WHERE r.TipoRecurso = 'PBN'
+WHERE r.TipoRecurso = 'PBN';
 
 --3
 SELECT j.NombreJugador, j.Alias
@@ -188,8 +210,8 @@ FROM jugador j
 JOIN paisPartidaJugador ppj ON j.Alias = ppj.Alias
 JOIN partida pa ON pa.IdPartida = ppj.IdPartida AND pa.IdPais = ppj.IdPais
 WHERE ppj.Rol = 'INVITADO' AND
-			pa.FechaCreacion >= DATEADD(month, -3, GETDATE()) AND
-			pa.ConfiguracionConsumo = (SELECT MAX(ConfiguracionConsumo) FROM partida)
+			pa.FechaCreacion >= ADD_MONTHS(SYSDATE, -3) AND
+			pa.ConfiguracionConsumo = (SELECT MAX(ConfiguracionConsumo) FROM partida);
 
 --4
 SELECT t.JugadorA
@@ -198,15 +220,15 @@ JOIN recurso r ON r.IdRecurso = t.IdRecursoA
 WHERE r.Nombre = 'H' AND
 			t.CantidadRecursoA = (SELECT MIN(t2.CantidadRecursoA)
 														FROM trueque t2
-														JOIN recurso r2 ON r.IdRecurso = t2.IdRecursoA
-														WHERE r2.Nombre = 'H')
+														JOIN recurso r2 ON r2.IdRecurso = t2.IdRecursoA
+														WHERE r2.Nombre = 'H');
 
 --5 
-SELECT j.Alias, j.Nombre
+SELECT j.Alias, j.NombreJugador
 FROM jugador j
 JOIN paisPartidaJugador ppj ON ppj.Alias = j.Alias
 JOIN partida pa ON pa.IdPartida = ppj.IdPartida --CREO QUE FALTA pa.IdPais = ppj.IdPais
-WHERE	p.ConfiguracionConsumo > 100
+WHERE pa.ConfiguracionConsumo > 100
 			AND NOT EXISTS (
 				SELECT 1
 				FROM recurso r
