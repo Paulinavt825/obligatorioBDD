@@ -166,3 +166,58 @@ JOIN recurso r ON c.IdRecurso = r.IdRecurso
 WHERE c.TipoConstruccion = 'PUERTO' AND r.TipoRecurso = 'CONSTRUCCION')
 
 --2
+SELECT pa.IdPartida, pais.NombrePais, pa.FechaCreacion, ppj.Alias
+FROM paisPartidaJugador ppj
+JOIN partida pa ON pa.IdPartida = ppj.IdPartida AND pa.IdPais = ppj.IdPais
+JOIN pais pais ON pais.IdPais = ppj.IdPais
+
+MINUS
+
+SELECT pa.IdPartida, pais.NombrePais, pa.FechaCreacion, ppj.Alias
+FROM paisPartidaJugador ppj
+JOIN partida pa ON pa.IdPartida = ppj.IdPartida AND pa.IdPais = ppj.IdPais
+JOIN pais pais ON pais.IdPais = ppj.IdPais
+JOIN trueque t ON (t.IdPartidaA = ppj.IdPartida AND t.IdPaisA = ppj.IdPais AND t.JugadorA = ppj.Alias) OR
+								(t.IdPartidaB = ppj.IdPartida AND t.IdPaisB = ppj.IdPais AND t.JugadorB = ppj.Alias)
+JOIN recurso r ON t.IdRecursoA = r.IdRecurso OR t.IdRecursoB = r.IdRecurso
+WHERE r.TipoRecurso = 'PBN'
+
+--3
+SELECT j.NombreJugador, j.Alias
+FROM jugador j
+JOIN paisPartidaJugador ppj ON j.Alias = ppj.Alias
+JOIN partida pa ON pa.IdPartida = ppj.IdPartida AND pa.IdPais = ppj.IdPais
+WHERE ppj.Rol = 'INVITADO' AND
+			pa.FechaCreacion >= DATEADD(month, -3, GETDATE()) AND
+			pa.ConfiguracionConsumo = (SELECT MAX(ConfiguracionConsumo) FROM partida)
+
+--4
+SELECT t.JugadorA
+FROM trueque t
+JOIN recurso r ON r.IdRecurso = t.IdRecursoA
+WHERE r.Nombre = 'H' AND
+			t.CantidadRecursoA = (SELECT MIN(t2.CantidadRecursoA)
+														FROM trueque t2
+														JOIN recurso r2 ON r.IdRecurso = t2.IdRecursoA
+														WHERE r2.Nombre = 'H')
+
+--5 
+SELECT j.Alias, j.Nombre
+FROM jugador j
+JOIN paisPartidaJugador ppj ON ppj.Alias = j.Alias
+JOIN partida pa ON pa.IdPartida = ppj.IdPartida --CREO QUE FALTA pa.IdPais = ppj.IdPais
+WHERE	p.ConfiguracionConsumo > 100
+			AND NOT EXISTS (
+				SELECT 1
+				FROM recurso r
+				WHERE r.TipoRecurso = 'CONSTRUCCION'
+							AND NOT EXISTS (
+								SELECT 1
+								FROM construccion c
+								WHERE ppj.IdPartida = c.IdPartida AND
+											ppj.IdPais = c.IdPais AND
+											ppj.Alias = c.Alias AND
+											r.IdRecurso = c.IdRecurso AND
+											c.TipoOperacion = 'CONSUME'
+							)
+			)
