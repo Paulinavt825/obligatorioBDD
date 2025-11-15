@@ -309,13 +309,13 @@ HAVING COUNT(*) >= ALL (
     GROUP BY r2.nombre, r2.tipoRecurso
 );
 
---7            
+--7
 SELECT DISTINCT ppj.idPartida, pai.nombrePais
 FROM pais pai
 JOIN paisPartidaJugador ppj ON ppj.idPais = pai.idPais
 JOIN inventarioRecurso ir ON ir.idPartida = ppj.idPartida AND ir.idPais = ppj.idPais AND ir.Alias = ppj.Alias
 JOIN recurso r ON r.idRecurso = ir.idRecurso
-WHERE 
+WHERE
     r.tipoRecurso = 'CONSTRUCCION'
     
     AND ir.stockAcumulado = (
@@ -338,8 +338,40 @@ WHERE
             (t.IdPartidaA = ppj.idPartida)
             AND
             (pai2.nombrePais = 'Uruguay' OR pai2.nombrePais = 'Brasil' OR pai2.nombrePais = 'Argentina')
-            --((t.IdPaisA = 100 OR t.IdPaisA = 101 OR t.IdPaisA = 102) OR (t.IdPaisB = 100 OR t.IdPaisB = 101 OR t.IdPaisB = 102))
     );
 
-
-
+--8
+SELECT DISTINCT ppj.idPartida, pai.nombrePais
+FROM pais pai
+JOIN paisPartidaJugador ppj ON pai.idPais = ppj.idPais
+JOIN inventarioRecurso ir ON ir.idPartida = ppj.idPartida AND ir.idPais = ppj.idPais AND ir.Alias = ppj.Alias
+JOIN construccion c ON c.idPartida = ir.idPartida AND c.idPais = ir.idPais AND c.Alias = ir.Alias AND c.idRecurso = ir.idRecurso
+JOIN recurso r ON r.idRecurso = ir.idRecurso
+WHERE r.tipoRecurso = 'CONSUMO'
+    AND NOT EXISTS (
+            SELECT 1
+            FROM trueque t
+            WHERE (t.IdPartidaA = ppj.IdPartida AND t.IdPaisA = ppj.IdPais AND t.JugadorA = ppj.Alias)
+               OR (t.IdPartidaB = ppj.IdPartida AND t.IdPaisB = ppj.IdPais AND t.JugadorB = ppj.Alias)
+          )
+    AND (
+        (SELECT SUM(c2.CantidadRecurso)
+         FROM construccion c2
+         JOIN inventarioRecurso ir2 ON ir2.idPartida = c2.idPartida AND ir2.idPais = c2.idPais AND ir2.Alias = c2.Alias AND ir2.idRecurso = c2.idRecurso
+         JOIN recurso r2 ON r2.idRecurso = ir2.idRecurso
+         WHERE c2.IdPartida = ppj.IdPartida
+           AND c2.IdPais = ppj.IdPais
+           AND r2.tipoRecurso = 'CONSUMO'
+           AND c2.TipoOperacion = 'PRODUCE'
+        )
+        >
+        (SELECT SUM(c3.CantidadRecurso)
+         FROM construccion c3
+         JOIN inventarioRecurso ir3 ON ir3.idPartida = c3.idPartida AND ir3.idPais = c3.idPais AND ir3.Alias = c3.Alias AND ir3.idRecurso = c3.idRecurso
+         JOIN recurso r3 ON r3.idRecurso = ir3.idRecurso
+         WHERE c3.IdPartida = ppj.IdPartida
+           AND c3.IdPais = ppj.IdPais
+           AND r3.tipoRecurso = 'CONSUMO'
+           AND c3.TipoOperacion = 'CONSUME'
+        )
+    );
