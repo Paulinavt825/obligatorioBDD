@@ -330,11 +330,16 @@ WHERE
     AND EXISTS (
         SELECT 1
         FROM trueque t
+        JOIN inventarioRecurso ir2 ON (ir2.idPartida = t.idPartidaA AND ir2.idPais = t.idPaisA AND ir2.Alias = t.JugadorA)
+                                  OR (ir2.idPartida = t.idPartidaB AND ir2.idPais = t.idPaisB AND ir2.Alias = t.JugadorB)
+        JOIN paisPartidaJugador ppj2 ON ir2.idPartida = ppj2.idPartida AND ir2.idPais = ppj2.idPais AND ir2.Alias = ppj2.Alias
+        JOIN pais pai2 ON ppj2.idPais = pai2.idPais
         WHERE 
             (t.IdPartidaA = ppj.idPartida)
             AND
-            ((t.IdPaisA = 100 OR t.IdPaisA = 101 OR t.IdPaisA = 102) OR (t.IdPaisB = 100 OR t.IdPaisB = 101 OR t.IdPaisB = 102))
-    );      
+            (pai2.nombrePais = 'Uruguay' OR pai2.nombrePais = 'Brasil' OR pai2.nombrePais = 'Argentina')
+            --((t.IdPaisA = 100 OR t.IdPaisA = 101 OR t.IdPaisA = 102) OR (t.IdPaisB = 100 OR t.IdPaisB = 101 OR t.IdPaisB = 102))
+    );
 
 
 
