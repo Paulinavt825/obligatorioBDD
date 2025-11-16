@@ -125,6 +125,7 @@ INSERT INTO partida VALUES (3, 101, TO_DATE('05/05/2024', 'DD/MM/YYYY'), 500);
 INSERT INTO partida VALUES (3, 102, TO_DATE('05/05/2024', 'DD/MM/YYYY'), 500);
 INSERT INTO partida VALUES (4, 103, TO_DATE('20/10/2025', 'DD/MM/YYYY'), 2000);
 INSERT INTO partida VALUES (4, 100, TO_DATE('20/10/2025', 'DD/MM/YYYY'), 2000);
+INSERT INTO partida VALUES (4, 104, TO_DATE('20/10/2025', 'DD/MM/YYYY'), 2000);
 
 -- PAISPARTIDAJUGADOR
 INSERT INTO paisPartidaJugador VALUES (1, 100, 'michp', 'ANFITRION');
@@ -135,7 +136,7 @@ INSERT INTO paisPartidaJugador VALUES (2, 100, 'melik', 'INVITADO');
 INSERT INTO paisPartidaJugador VALUES (3, 101, 'michp', 'ANFITRION');
 INSERT INTO paisPartidaJugador VALUES (3, 102, 'letik', 'SE UNIO');
 INSERT INTO paisPartidaJugador VALUES (4, 103, 'paud10', 'ANFITRION');
-INSERT INTO paisPartidaJugador VALUES (4, 103, 'franva', 'INVITADO');
+INSERT INTO paisPartidaJugador VALUES (4, 104, 'franva', 'INVITADO');
 INSERT INTO paisPartidaJugador VALUES (4, 100, 'matsal', 'SE UNIO');
 
 -- INVENTARIORECURSO
@@ -318,14 +319,27 @@ JOIN recurso r ON r.idRecurso = ir.idRecurso
 WHERE
     r.tipoRecurso = 'CONSTRUCCION'
     
-    AND ir.stockAcumulado = (
-        SELECT MIN(ir3.stockAcumulado) 
+    AND (
+        (
+        SELECT SUM(ir3.stockAcumulado)
         FROM inventarioRecurso ir3
         JOIN recurso r3 ON r3.idRecurso = ir3.idRecurso
         JOIN paisPartidaJugador ppj3 ON ir3.idPartida = ppj3.idPartida AND ir3.idPais = ppj3.idPais AND ir3.Alias = ppj3.Alias
-        WHERE r3.tipoRecurso = 'CONSTRUCCION' 
+        WHERE r3.tipoRecurso = 'CONSTRUCCION'
           AND ppj3.idPartida = ppj.idPartida
-    ) 
+          AND ppj3.idPais = ppj.idPais
+        )
+        <= ALL
+        (
+        SELECT SUM(ir3.stockAcumulado)
+        FROM inventarioRecurso ir3
+        JOIN recurso r3 ON r3.idRecurso = ir3.idRecurso
+        JOIN paisPartidaJugador ppj3 ON ir3.idPartida = ppj3.idPartida AND ir3.idPais = ppj3.idPais AND ir3.Alias = ppj3.Alias
+        WHERE r3.tipoRecurso = 'CONSTRUCCION'
+          AND ppj3.idPartida = ppj.idPartida
+        GROUP BY ppj3.idPais
+        )
+    )
     
     AND EXISTS (
         SELECT 1
