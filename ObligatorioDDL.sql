@@ -311,6 +311,7 @@ HAVING COUNT(*) >= ALL (
 );
 
 --7
+-- Consideramos menores pero que existen
 SELECT DISTINCT ppj.idPartida, pai.nombrePais
 FROM pais pai
 JOIN paisPartidaJugador ppj ON ppj.idPais = pai.idPais
@@ -389,3 +390,57 @@ WHERE r.tipoRecurso = 'CONSUMO'
            AND c3.TipoOperacion = 'CONSUME'
         )
     );
+
+--9
+WITH cantConsUsinas AS (
+    SELECT c.idPartida, c.idPais, c.Alias, COUNT(*) AS cantConstruccionUsinas
+    FROM construccion c
+    JOIN inventarioRecurso ir ON c.idPartida = ir.idPartida AND c.idPais = ir.idPais AND c.Alias = ir.Alias AND c.idRecurso = ir.idRecurso
+    JOIN paisPartidaJugador ppj ON ir.idPartida = ppj.idPartida AND ir.idPais = ppj.idPais AND ir.Alias = ppj.Alias
+    WHERE c.tipoConstruccion = 'USINAS'
+    GROUP BY c.idPartida, c.idPais, c.Alias
+),
+
+cantCons AS (
+    SELECT c.idPartida, c.idPais, c.Alias, COUNT(*) AS cantConstruccion
+    FROM construccion c
+    JOIN inventarioRecurso ir ON c.idPartida = ir.idPartida AND c.idPais = ir.idPais AND c.Alias = ir.Alias AND c.idRecurso = ir.idRecurso
+    JOIN paisPartidaJugador ppj ON ir.idPartida = ppj.idPartida AND ir.idPais = ppj.idPais AND ir.Alias = ppj.Alias
+    GROUP BY c.idPartida, c.idPais, c.Alias
+),
+
+stockAc AS (
+    SELECT ppj3.idPais, ppj3.idPartida, ppj3.Alias, SUM(ir3.stockAcumulado) AS suma
+    FROM inventarioRecurso ir3
+    JOIN recurso r3 ON r3.idRecurso = ir3.idRecurso
+    JOIN paisPartidaJugador ppj3 ON ir3.idPartida = ppj3.idPartida AND ir3.idPais = ppj3.idPais AND ir3.Alias = ppj3.Alias
+    GROUP BY ppj3.idPais, ppj3.idPartida, ppj3.Alias
+),
+
+cantTruequesB AS (
+    SELECT t.idPaisB, t.idPartidaB, t.JugadorB, COUNT(*) AS cantTB
+    FROM trueque t
+    GROUP BY t.idPaisB, t.idPartidaB, t.JugadorB
+)
+
+SELECT par.*, pai.*, j.alias, j.nombreJugador, ppj.rol,
+    CASE
+        WHEN ppj.rol = 'ANFITRION' THEN 'Creador de la partida'
+        WHEN ppj.rol = 'INVITADO' THEN 'Invitado por el anfitrion'
+        WHEN ppj.rol = 'SE UNIO' THEN 'Se unio voluntariamente'
+    END AS Descripcion,
+    NVL(ccu.cantConstruccionUsinas, 0) AS cantConstruccionUsinas, ((NVL(ccu.cantConstruccionUsinas, 0) * 100) / NVL(cc.cantConstruccion, 1)) AS porcentaje,
+    CASE
+        WHEN ppj.rol = 'ANFITRION' THEN NVL(sa.suma, 0)
+        WHEN ppj.rol = 'INVITADO' THEN NVL(cc.cantConstruccion, 0)
+        WHEN ppj.rol = 'SE UNIO' THEN NVL(ctb.cantTB, 0)
+    END AS Extra
+FROM partida par
+JOIN paisPartidaJugador ppj ON ppj.idPartida = par.idPartida AND ppj.idPais = par.idPais
+JOIN pais pai ON pai.idPais = ppj.idPais
+JOIN jugador j ON j.alias = ppj.alias
+LEFT JOIN cantConsUsinas ccu ON ppj.idPartida = ccu.idPartida AND ppj.idPais = ccu.idPais AND ppj.Alias = ccu.Alias
+LEFT JOIN cantCons cc ON ppj.idPartida = cc.idPartida AND ppj.idPais = cc.idPais AND ppj.Alias = cc.Alias
+LEFT JOIN stockAc sa ON ppj.idPartida = sa.idPartida AND ppj.idPais = sa.idPais AND ppj.Alias = sa.Alias
+LEFT JOIN cantTruequesB ctb ON ppj.idPartida = ctb.idPartidaB AND ppj.idPais = ctb.idPaisB AND ppj.Alias = ctb.jugadorB
+WHERE par.fechaCreacion >= '01/01/2025';
