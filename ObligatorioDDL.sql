@@ -134,10 +134,11 @@ INSERT INTO partida VALUES (4, 100, TO_DATE('20/10/2025', 'DD/MM/YYYY'), 2000);
 INSERT INTO partida VALUES (4, 104, TO_DATE('20/10/2025', 'DD/MM/YYYY'), 2000);
 INSERT INTO partida VALUES (5, 105, TO_DATE('05/11/2025','DD/MM/YYYY'), 700);
 INSERT INTO partida VALUES (5, 106, TO_DATE('05/11/2025','DD/MM/YYYY'), 700);
-INSERT INTO partida VALUES (6, 100, TO_DATE('10/10/2025','DD/MM/YYYY'), 1200);   -- >1000, sirve para consulta 5
+INSERT INTO partida VALUES (6, 100, TO_DATE('10/10/2025','DD/MM/YYYY'), 1200);
 INSERT INTO partida VALUES (6, 101, TO_DATE('10/10/2025','DD/MM/YYYY'), 1200);
-INSERT INTO partida VALUES (7, 102, TO_DATE('02/11/2025','DD/MM/YYYY'), 2000);   -- reciente, sirve consulta 6
+INSERT INTO partida VALUES (7, 102, TO_DATE('02/11/2025','DD/MM/YYYY'), 2000);
 INSERT INTO partida VALUES (7, 104, TO_DATE('02/11/2025','DD/MM/YYYY'), 2000);
+INSERT INTO partida VALUES (8, 100, TO_DATE('18/11/2025','DD/MM/YYYY'), 900);
 
 -- PAISPARTIDAJUGADOR
 INSERT INTO paisPartidaJugador VALUES (1, 100, 'michp', 'ANFITRION');
@@ -157,6 +158,7 @@ INSERT INTO paisPartidaJugador VALUES (6, 101, 'franrod', 'SE UNIO');
 INSERT INTO paisPartidaJugador VALUES (7, 102, 'paud10', 'INVITADO');
 INSERT INTO paisPartidaJugador VALUES (7, 104, 'franva', 'ANFITRION');
 INSERT INTO paisPartidaJugador VALUES (7, 104, 'vickyvaz', 'SE UNIO');
+INSERT INTO paisPartidaJugador VALUES (8, 100, 'michp', 'ANFITRION');
 
 -- INVENTARIORECURSO
 INSERT INTO inventarioRecurso VALUES (1, 100, 'michp', 1, 100);
@@ -182,8 +184,8 @@ INSERT INTO inventarioRecurso VALUES (5, 105, 'julisch', 20, 300);
 INSERT INTO inventarioRecurso VALUES (5, 105, 'julisch', 21, 400);
 INSERT INTO inventarioRecurso VALUES (5, 106, 'camica', 20, 5);
 INSERT INTO inventarioRecurso VALUES (5, 106, 'camica', 10, 8);
-INSERT INTO inventarioRecurso VALUES (6, 100, 'michp',   10, 50);
-INSERT INTO inventarioRecurso VALUES (6, 100, 'michp',   11, 50);
+INSERT INTO inventarioRecurso VALUES (6, 100, 'michp', 10, 50);
+INSERT INTO inventarioRecurso VALUES (6, 100, 'michp', 11, 50);
 INSERT INTO inventarioRecurso VALUES (6, 101, 'franrod', 10, 500);
 INSERT INTO inventarioRecurso VALUES (6, 101, 'franrod', 11, 300);
 INSERT INTO inventarioRecurso VALUES (7, 102, 'paud10', 20, 1000);
@@ -191,10 +193,11 @@ INSERT INTO inventarioRecurso VALUES (7, 102, 'paud10', 10, 5);
 INSERT INTO inventarioRecurso VALUES (7, 104, 'franva', 20, 10);
 INSERT INTO inventarioRecurso VALUES (7, 104, 'franva', 11, 2);
 INSERT INTO inventarioRecurso VALUES (7, 104, 'vickyvaz', 20, 50);
+INSERT INTO inventarioRecurso VALUES (8, 100, 'michp', 10, 300);
 
 -- CONSTRUCCION
 INSERT INTO construccion VALUES (3, 101, 'michp', 10, 101, 'PUERTO', 'CONSUME', 50);
-INSERT INTO construccion VALUES (3, 102, 'letik', 11, 102, 'ASTILLERO', 'CONSUME', 50);
+INSERT INTO construccion VALUES (3, 102, 'letik', 11, 102, 'USINAS', 'CONSUME', 50);
 INSERT INTO construccion VALUES (1, 100, 'michp', 10, 103, 'PUERTO', 'CONSUME', 10);
 INSERT INTO construccion VALUES (1, 100, 'michp', 11, 104, 'ASTILLERO', 'CONSUME', 10);
 INSERT INTO construccion VALUES (1, 100, 'michp', 10, 201, 'PLANTACION', 'CONSUME', 10);
@@ -211,8 +214,8 @@ INSERT INTO construccion VALUES (2, 100, 'melik', 20, 305, 'USINAS', 'PRODUCE', 
 INSERT INTO construccion VALUES (2, 100, 'melik', 20, 306, 'USINAS', 'CONSUME', 200);
 INSERT INTO construccion VALUES (1, 100, 'michp', 23, 401, 'USINAS', 'PRODUCE', 100);
 INSERT INTO construccion VALUES (1, 100, 'michp', 23, 402, 'USINAS', 'PRODUCE', 100);
-INSERT INTO construccion VALUES (5, 105, 'julisch', 20, 501, 'PUERTO',     'CONSUME', 20);
-INSERT INTO construccion VALUES (5, 105, 'julisch', 21, 502, 'ASTILLERO',  'PRODUCE', 40);
+INSERT INTO construccion VALUES (5, 105, 'julisch', 20, 501, 'PUERTO', 'CONSUME', 20);
+INSERT INTO construccion VALUES (5, 105, 'julisch', 21, 502, 'ASTILLERO', 'PRODUCE', 40);
 INSERT INTO construccion VALUES (5, 106, 'camica',  10, 503, 'PLANTACION', 'CONSUME', 10);
 INSERT INTO construccion VALUES (6, 100, 'michp', 10, 601, 'PUERTO', 'CONSUME', 30);
 INSERT INTO construccion VALUES (6, 100, 'michp', 11, 602, 'ASTILLERO', 'CONSUME', 30);
@@ -229,14 +232,16 @@ INSERT INTO construccion VALUES (6, 101, 'franrod', 11, 612, 'PLANTACION', 'CONS
 INSERT INTO construccion VALUES (7, 102, 'paud10', 10, 701, 'PUERTO', 'CONSUME', 10);
 INSERT INTO construccion VALUES (7, 104, 'franva', 11, 702, 'PLANTACION', 'PRODUCE', 20);
 INSERT INTO construccion VALUES (7, 104, 'vickyvaz', 20, 703, 'ASTILLERO', 'CONSUME', 8);
+INSERT INTO construccion VALUES (8, 100, 'michp',10, 801, 'PLANTACION', 'CONSUME', 25);
+
 
 --TRUEQUE
 INSERT INTO trueque VALUES (1, 1, 100, 'michp', 1, 1, 101, 'letik', 11, 50, 50);
 INSERT INTO trueque VALUES (2, 1, 100, 'michp', 10, 1, 102, 'paud10', 20, 10, 50);
 INSERT INTO trueque VALUES (3, 1, 102, 'paud10', 10, 1, 100, 'michp', 11, 25, 20);
 INSERT INTO trueque VALUES (4, 5, 105, 'julisch', 20, 5, 106, 'camica', 10, 50, 5);
-INSERT INTO trueque VALUES (5, 7, 102, 'paud10', 10, 7, 104, 'franva',   11, 2,  5);
-INSERT INTO trueque VALUES (6, 7, 104, 'franva', 20, 7, 102, 'paud10', 20, 1,  1);
+INSERT INTO trueque VALUES (5, 7, 102, 'paud10', 10, 7, 104, 'franva', 11, 2, 5);
+INSERT INTO trueque VALUES (6, 7, 104, 'franva', 20, 7, 102, 'paud10', 20, 1, 1);
 
 COMMIT;
 
@@ -250,12 +255,10 @@ JOIN construccion c ON ppj.idPais = c.idPais AND ppj.idPartida = c.idPartida AND
 JOIN inventarioRecurso ir ON ir.idPartida = c.idPartida AND ir.idPais = c.idPais AND ir.Alias = c.Alias AND ir.idRecurso = c.idRecurso
 JOIN recurso r ON ir.IdRecurso = r.idRecurso
 WHERE r.TipoRecurso = 'CONSTRUCCION' AND (c.TipoConstruccion = 'ASTILLERO' OR c.TipoConstruccion = 'PUERTO')
-GROUP BY p.idPais, p.nombrePais
-HAVING COUNT(DISTINCT c.tipoConstruccion) = 1;
 
 MINUS
 
-(SELECT p.*
+(SELECT p.idPais, p.nombrePais
 FROM pais p
 JOIN paisPartidaJugador ppj ON ppj.idPais = p.idPais
 JOIN construccion c ON ppj.idPais = c.idPais AND ppj.idPartida = c.idPartida AND ppj.Alias = c.Alias
@@ -265,7 +268,7 @@ WHERE c.TipoConstruccion = 'ASTILLERO' AND r.TipoRecurso = 'CONSTRUCCION'
 
 INTERSECT
 
-SELECT p.*
+SELECT p.idPais, p.nombrePais
 FROM pais p
 JOIN paisPartidaJugador ppj ON ppj.idPais = p.idPais
 JOIN construccion c ON ppj.idPais = c.idPais AND ppj.idPartida = c.idPartida AND ppj.Alias = c.Alias
@@ -511,14 +514,14 @@ WITH tabPartidas AS (
 ),
 
 tabConstrucciones AS (
-    SELECT c.idPartida, c.idPais, c.Alias, c.idRecurso, c.idConstruccion, COUNT(*) AS cantConstrucciones
+    SELECT ir.idRecurso, COUNT(c.idConstruccion) AS cantConstrucciones
     FROM recurso r
     JOIN inventarioRecurso ir ON ir.idRecurso = r.idRecurso
     JOIN paisPartidaJugador ppj ON ppj.idPartida = ir.idPartida AND ppj.idPais = ir.idPais AND ppj.Alias = ir.Alias
     JOIN construccion c ON c.idPartida = ir.idPartida AND c.idPais = ir.idPais AND c.Alias = ir.Alias AND c.idRecurso = ir.idRecurso
     JOIN partida par ON par.idPartida = ppj.idPartida AND par.idPais = ppj.idPais
     WHERE par.fechaCreacion >= (SYSDATE - 15) 
-    GROUP BY c.idPartida, c.idPais, c.Alias, c.idRecurso, c.idConstruccion
+    GROUP BY ir.idRecurso
 ),
 
 countPais AS (
@@ -532,26 +535,19 @@ countPais AS (
     GROUP BY r.idRecurso, pai.idPais, pai.nombrePais
 )
 
-SELECT r.nombre, tp.cantPartidas, tc.cantConstrucciones, cp.nombrePais AS minPais, cp2.nombrePais AS maxPais
+SELECT r.nombre, tp.cantPartidas, tc.cantConstrucciones, cpMin.nombrePais AS minPais, cpMax.nombrePais AS maxPais
 FROM recurso r
-JOIN inventarioRecurso ir ON ir.idRecurso = r.idRecurso
-JOIN paisPartidaJugador ppj ON ppj.idPartida = ir.idPartida AND ppj.idPais = ir.idPais AND ppj.Alias = ir.Alias
-JOIN construccion c ON c.idPartida = ir.idPartida AND c.idPais = ir.idPais AND c.Alias = ir.Alias AND c.idRecurso = ir.idRecurso
-JOIN partida par ON par.idPartida = ppj.idPartida AND par.idPais = ppj.idPais
-JOIN pais pai ON pai.idPais = ppj.idPais
+--JOIN inventarioRecurso ir ON ir.idRecurso = r.idRecurso
+--JOIN paisPartidaJugador ppj ON ppj.idPartida = ir.idPartida AND ppj.idPais = ir.idPais AND ppj.Alias = ir.Alias
+--JOIN construccion c ON c.idPartida = ir.idPartida AND c.idPais = ir.idPais AND c.Alias = ir.Alias AND c.idRecurso = ir.idRecurso
+--JOIN partida par ON par.idPartida = ppj.idPartida AND par.idPais = ppj.idPais
+--JOIN pais pai ON pai.idPais = ppj.idPais
 JOIN tabPartidas tp ON tp.idRecurso = r.idRecurso
-JOIN tabConstrucciones tc ON tc.idPartida = c.idPartida AND tc.idPais = c.idPais AND tc.Alias = c.Alias AND tc.idRecurso = c.idRecurso AND tc.idConstruccion = c.idConstruccion
-JOIN countPais cp ON cp.idRecurso = r.idRecurso AND cp.idPais = pai.idPais
-JOIN countPais cp2 ON cp2.idRecurso = r.idRecurso AND cp2.idPais = pai.idPais
-WHERE par.fechaCreacion >= (SYSDATE - 15) AND cp.cantRec = (SELECT MIN(cantRec) FROM countPais WHERE r.idRecurso = idRecurso) AND cp2.cantRec = (SELECT MAX(cantRec) FROM countPais WHERE r.idRecurso = idRecurso);
-
-
-
-
-
-
-
-
+JOIN tabConstrucciones tc ON tc.idRecurso = r.idRecurso
+JOIN countPais cpMin ON cpMin.idRecurso = r.idRecurso
+JOIN countPais cpMax ON cpMax.idRecurso = r.idRecurso
+WHERE cpMin.cantRec = (SELECT MIN(cantRec) FROM countPais WHERE r.idRecurso = idRecurso) 
+    AND cpMax.cantRec = (SELECT MAX(cantRec) FROM countPais WHERE r.idRecurso = idRecurso);
 
 
 
