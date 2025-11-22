@@ -288,10 +288,12 @@ SELECT pa.IdPartida, pais.NombrePais, pa.FechaCreacion, ppj.Alias
 FROM paisPartidaJugador ppj
 JOIN partida pa ON pa.IdPartida = ppj.IdPartida AND pa.IdPais = ppj.IdPais
 JOIN pais pais ON pais.IdPais = ppj.IdPais
-JOIN trueque t ON (t.IdPartidaA = ppj.IdPartida AND t.IdPaisA = ppj.IdPais AND t.JugadorA = ppj.Alias) OR
-								(t.IdPartidaB = ppj.IdPartida AND t.IdPaisB = ppj.IdPais AND t.JugadorB = ppj.Alias)
+JOIN inventarioRecurso ir ON ir.idPartida = ppj.idPartida AND ir.idPais = ppj.idPais AND ir.Alias = ppj.Alias
+JOIN trueque t ON (t.IdPartidaA = ir.IdPartida AND t.IdPaisA = ir.IdPais AND t.JugadorA = ir.Alias) OR
+								(t.IdPartidaB = ir.IdPartida AND t.IdPaisB = ir.IdPais AND t.JugadorB = ir.Alias)
 JOIN recurso r ON t.IdRecursoA = r.IdRecurso OR t.IdRecursoB = r.IdRecurso
 WHERE r.TipoRecurso = 'PBN';
+
 
 --3
 SELECT j.NombreJugador, j.Alias
