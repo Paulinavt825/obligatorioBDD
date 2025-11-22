@@ -368,7 +368,6 @@ HAVING COUNT(*) >= ALL (
 );
 
 --7
--- Consideramos menores pero que existen
 SELECT DISTINCT ppj.idPartida, pai.nombrePais
 FROM pais pai
 JOIN paisPartidaJugador ppj ON ppj.idPais = pai.idPais
@@ -514,40 +513,36 @@ WITH tabPartidas AS (
 ),
 
 tabConstrucciones AS (
-    SELECT ir.idRecurso, COUNT(c.idConstruccion) AS cantConstrucciones
-    FROM recurso r
-    JOIN inventarioRecurso ir ON ir.idRecurso = r.idRecurso
-    JOIN paisPartidaJugador ppj ON ppj.idPartida = ir.idPartida AND ppj.idPais = ir.idPais AND ppj.Alias = ir.Alias
-    JOIN construccion c ON c.idPartida = ir.idPartida AND c.idPais = ir.idPais AND c.Alias = ir.Alias AND c.idRecurso = ir.idRecurso
-    JOIN partida par ON par.idPartida = ppj.idPartida AND par.idPais = ppj.idPais
-    WHERE par.fechaCreacion >= (SYSDATE - 15) 
-    GROUP BY ir.idRecurso
+    SELECT c.idRecurso, COUNT(*) AS cantConstrucciones
+    FROM construccion c
+    GROUP BY c.idRecurso
 ),
 
 countPais AS (
-    SELECT r.idRecurso, pai.idPais, pai.nombrePais, COUNT(*) AS cantRec
-    FROM recurso r
-    JOIN inventarioRecurso ir ON ir.idRecurso = r.idRecurso
+    SELECT ir.idRecurso, pai.nombrePais, COUNT(*) AS cantRec
+    FROM inventarioRecurso ir
     JOIN paisPartidaJugador ppj ON ppj.idPartida = ir.idPartida AND ppj.idPais = ir.idPais AND ppj.Alias = ir.Alias
-    JOIN partida par ON par.idPartida = ppj.idPartida AND par.idPais = ppj.idPais
     JOIN pais pai ON pai.idPais = ppj.idPais
-    WHERE par.fechaCreacion >= (SYSDATE - 15)
-    GROUP BY r.idRecurso, pai.idPais, pai.nombrePais
+    GROUP BY ir.idRecurso, pai.nombrePais
 )
 
-SELECT r.nombre, tp.cantPartidas, tc.cantConstrucciones, cpMin.nombrePais AS minPais, cpMax.nombrePais AS maxPais
+SELECT r.nombre AS recurso, 
+        NVL(tp.cantPartidas, 0) AS cantPartidas,
+        NVL(tc.cantConstrucciones, 0) AS cantConstrucciones,
+        CASE
+            WHEN tc.cantConstrucciones IS NULL THEN 'NO HAY'
+            ELSE cpMin.nombrePais
+        END AS minPais,
+        CASE
+            WHEN tc.cantConstrucciones IS NULL THEN 'NO HAY'
+            ELSE cpMax.nombrePais
+        END AS maxPais
 FROM recurso r
---JOIN inventarioRecurso ir ON ir.idRecurso = r.idRecurso
---JOIN paisPartidaJugador ppj ON ppj.idPartida = ir.idPartida AND ppj.idPais = ir.idPais AND ppj.Alias = ir.Alias
---JOIN construccion c ON c.idPartida = ir.idPartida AND c.idPais = ir.idPais AND c.Alias = ir.Alias AND c.idRecurso = ir.idRecurso
---JOIN partida par ON par.idPartida = ppj.idPartida AND par.idPais = ppj.idPais
---JOIN pais pai ON pai.idPais = ppj.idPais
-JOIN tabPartidas tp ON tp.idRecurso = r.idRecurso
-JOIN tabConstrucciones tc ON tc.idRecurso = r.idRecurso
-JOIN countPais cpMin ON cpMin.idRecurso = r.idRecurso
-JOIN countPais cpMax ON cpMax.idRecurso = r.idRecurso
+LEFT JOIN tabPartidas tp ON tp.idRecurso = r.idRecurso
+LEFT JOIN tabConstrucciones tc ON tc.idRecurso = r.idRecurso
+LEFT JOIN countPais cpMin ON cpMin.idRecurso = r.idRecurso 
+LEFT JOIN countPais cpMax ON cpMax.idRecurso = r.idRecurso
 WHERE cpMin.cantRec = (SELECT MIN(cantRec) FROM countPais WHERE r.idRecurso = idRecurso) 
     AND cpMax.cantRec = (SELECT MAX(cantRec) FROM countPais WHERE r.idRecurso = idRecurso);
-
 
 
